@@ -22,6 +22,7 @@ function App() {
 
   return (
     <div>
+      <h1>Webrtc app</h1>
       {socket && (
         <>
           <Sender socket={socket} />
