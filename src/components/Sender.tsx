@@ -9,12 +9,11 @@ export const Sender = ({ socket }: { socket: Socket }) => {
     useState<MediaStreamTrack | null>(null);
   const [localAudioTrack, setLocalAudioTrack] =
     useState<MediaStreamTrack | null>(null);
-  const [sendingRtc, setSendingRTC] = useState<RTCPeerConnection | null>();
 
-  const localVideoTrackRef = useRef<HTMLVideoElement>();
-  const localAudioTrackRef = useRef<HTMLAudioElement>();
+  const localVideoTrackRef = useRef<HTMLVideoElement | null>(null);
+  const localAudioTrackRef = useRef<HTMLAudioElement | null>(null);
 
-  const setLocalMediaStream = async (rtcInstance) => {
+  const setLocalMediaStream = async (rtcInstance: RTCPeerConnection) => {
     const stream = await window.navigator.mediaDevices.getUserMedia({
       audio: true,
       video: true,
@@ -102,7 +101,7 @@ export const Sender = ({ socket }: { socket: Socket }) => {
 
   return (
     <>
-      {/* <audio autoPlay ref={localAudioTrackRef} /> */}
+      <audio autoPlay ref={localAudioTrackRef} />
       <video autoPlay ref={localVideoTrackRef} />
     </>
   );

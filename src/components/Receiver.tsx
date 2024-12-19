@@ -10,8 +10,8 @@ export const Receiver = ({ socket }: { socket: Socket }) => {
   const [remoteAudioTrack, setRemoteAudioTrack] =
     useState<MediaStreamTrack | null>(null);
 
-  const receiverVideoTrackRef = useRef<HTMLVideoElement>();
-  const receiverAudioTrackRef = useRef<HTMLAudioElement>();
+  const receiverVideoTrackRef = useRef<HTMLVideoElement | null>(null);
+  const receiverAudioTrackRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     if (!isComponentRendered.current) {
@@ -98,7 +98,7 @@ export const Receiver = ({ socket }: { socket: Socket }) => {
 
   return (
     <>
-      {/* <audio autoPlay ref={receiverAudioTrackRef} /> */}
+      <audio autoPlay ref={receiverAudioTrackRef} />
       <video autoPlay ref={receiverVideoTrackRef} />
     </>
   );
