@@ -4,7 +4,7 @@ import "./App.css";
 import { Sender } from "./components/Sender";
 import { Receiver } from "./components/Receiver";
 
-const URL = "energetic-sheri-malangave-e75cbb63.koyeb.app/:8888";
+const URL = "https://delightful-guan-malangave-12302ab7.koyeb.app/:8888";
 
 function App() {
   const socketInitialized = useRef(false);
