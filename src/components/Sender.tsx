@@ -73,6 +73,7 @@ export const Sender = ({ socket }: { socket: Socket }) => {
       });
 
       socket.on("answer", async ({ roomId, sdp: receiverSdp }) => {
+        console.log({ roomId });
         rtcInstance.current.setRemoteDescription(receiverSdp);
       });
 
