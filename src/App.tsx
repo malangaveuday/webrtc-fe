@@ -4,16 +4,27 @@ import "./App.css";
 import { Sender } from "./components/Sender";
 import { Receiver } from "./components/Receiver";
 
-const URL = "https://delightful-guan-malangave-12302ab7.koyeb.app/:8888";
+const URL = "https://delightful-guan-malangave-12302ab7.koyeb.app";
+
+// const URL = "http://localhost:8888";
 
 function App() {
   const socketInitialized = useRef(false);
+  const sessionId = useRef(localStorage.getItem("sessionId"));
 
   const [socket, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
     if (!socketInitialized.current) {
-      const socket = io(URL);
+      if (!sessionId.current) {
+        sessionId.current = `${Date.now()}`;
+        localStorage.setItem("sessionId", sessionId.current);
+      }
+      const socket = io(URL, {
+        auth: {
+          sessionId: sessionId.current,
+        },
+      });
       socketInitialized.current = true;
       setSocket(socket);
       console.log("socket initializes");
@@ -22,7 +33,6 @@ function App() {
 
   return (
     <div>
-      <h1>Webrtc app</h1>
       {socket && (
         <>
           <Sender socket={socket} />
