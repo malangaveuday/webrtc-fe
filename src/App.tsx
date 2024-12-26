@@ -16,8 +16,10 @@ function App() {
 
   useEffect(() => {
     if (!socketInitialized.current) {
+      console.log("=============  app initialized ============");
       if (!sessionId.current) {
         sessionId.current = `${Date.now()}`;
+        console.log("sessionId", sessionId);
         localStorage.setItem("sessionId", sessionId.current);
       }
       const socket = io(URL, {
