@@ -35,8 +35,10 @@ function App() {
 
   return (
     <div>
+      <h2>App</h2>
       {socket && (
         <>
+          <h1>Socket initialized</h1>
           <Sender socket={socket} />
           <Receiver socket={socket} />
         </>
