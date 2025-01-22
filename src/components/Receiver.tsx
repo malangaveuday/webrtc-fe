@@ -19,7 +19,7 @@ export const Receiver = ({ socket }: { socket: Socket }) => {
       socket.on("offer", async ({ roomId, sdp }) => {
         console.log("receiver", roomId);
         // const rtcInstance = new RTCPeerConnection();
-        //   setv remote description
+        //   set remote description
         await rtcInstance.current.setRemoteDescription(sdp);
 
         //   creating offer to send back
@@ -76,7 +76,7 @@ export const Receiver = ({ socket }: { socket: Socket }) => {
         }
       });
     }
-  }, []);
+  }, [socket]);
 
   useEffect(() => {
     if (receiverAudioTrackRef.current && remoteAudioTrack) {
@@ -98,7 +98,7 @@ export const Receiver = ({ socket }: { socket: Socket }) => {
 
   return (
     <>
-      <audio autoPlay ref={receiverAudioTrackRef} />
+      {/* <audio autoPlay ref={receiverAudioTrackRef} /> */}
       <video autoPlay ref={receiverVideoTrackRef} />
     </>
   );
