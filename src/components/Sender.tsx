@@ -10,7 +10,6 @@ export const Sender = ({
   videoTrack: MediaStreamTrack | null;
   audioTrack: MediaStreamTrack | null;
 }) => {
-  console.log({ videoTrack, audioTrack });
   const isComponentRendered = useRef(false);
   const rtcInstance = useRef<RTCPeerConnection>(new RTCPeerConnection());
 
@@ -47,10 +46,10 @@ export const Sender = ({
       isComponentRendered.current = true;
 
       socket.on("request-sent", async ({ roomId }) => {
-        console.log("received", roomId);
+        console.log("request received from second user", roomId);
 
         // onnegotiationneeded and onicecandidate this callback will registered
-        // only when we added track to the RTCPeerConnection
+        // only when we added track to the same RTCPeerConnection
         rtcInstance.current.onnegotiationneeded = async () => {
           console.log("Sender rtc instance onnegotiationneeded");
           //  create offer which return sdp (session description protocol)
@@ -67,7 +66,7 @@ export const Sender = ({
         // Handle ICE candidate generation
         rtcInstance.current.onicecandidate = (event) => {
           if (event.candidate) {
-            console.log("Sender ICE:", event.candidate);
+            console.log("Sende ICE candidate to Receiver");
             // Send the candidate to the remote peer via the signaling server
             // signalingServer.send({ type: "candidate", candidate: event.candidate });
             socket.emit("add-ice-candidate", {
@@ -82,12 +81,14 @@ export const Sender = ({
       });
 
       socket.on("answer", async ({ roomId, sdp: receiverSdp }) => {
-        console.log({ roomId });
+        console.log("After anwsered");
         rtcInstance.current.setRemoteDescription(receiverSdp);
       });
 
       socket.on("add-ice-candidate", ({ candidate, type }) => {
-        console.log("add-ice-candidate sender", { candidate, type });
+        console.log(
+          "request received from Receiver to add canditate to ICE connetion"
+        );
         if (type == "receiver") {
           rtcInstance.current.addIceCandidate(candidate);
         }
@@ -98,33 +99,31 @@ export const Sender = ({
   useEffect(() => {
     if (localVideoTrackRef.current && videoTrack) {
       localVideoTrackRef.current.srcObject = new MediaStream([videoTrack]);
-      console.log("Play vedio");
-      console.log(localVideoTrackRef.current);
-      // localVideoTrackRef.current.play();
     }
   }, [videoTrack]);
 
   useEffect(() => {
+    if (localAudioTrackRef.current && audioTrack) {
+      localAudioTrackRef.current.srcObject = new MediaStream([audioTrack]);
+    }
+  }, [audioTrack]);
+
+  useEffect(() => {
     if (localVideoTrackRef.current && localVideoTrack) {
       localVideoTrackRef.current.srcObject = new MediaStream([localVideoTrack]);
-      console.log("Play vedio");
-      console.log(localVideoTrackRef.current);
-      // localVideoTrackRef.current.play();
     }
-  }, [localVideoTrackRef, localVideoTrack]);
+  }, [localVideoTrack]);
 
   useEffect(() => {
     if (localAudioTrackRef.current && localAudioTrack) {
       localAudioTrackRef.current.srcObject = new MediaStream([localAudioTrack]);
-      console.log("Play audio");
-      // localAudioTrackRef.current.play();
     }
-  }, [localAudioTrackRef, localAudioTrack]);
+  }, [localAudioTrack]);
 
   return (
-    <>
+    <div className="flex-1">
       {/* <audio autoPlay ref={localAudioTrackRef} /> */}
-      <video autoPlay ref={localVideoTrackRef} />
-    </>
+      <video autoPlay ref={localVideoTrackRef} width="100%" />
+    </div>
   );
 };

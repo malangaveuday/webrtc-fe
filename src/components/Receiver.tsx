@@ -17,8 +17,7 @@ export const Receiver = ({ socket }: { socket: Socket }) => {
     if (!isComponentRendered.current) {
       isComponentRendered.current = true;
       socket.on("offer", async ({ roomId, sdp }) => {
-        console.log("receiver", roomId);
-        // const rtcInstance = new RTCPeerConnection();
+        console.log("received offer from sender", roomId);
         //   set remote description
         await rtcInstance.current.setRemoteDescription(sdp);
 
@@ -46,7 +45,7 @@ export const Receiver = ({ socket }: { socket: Socket }) => {
         // Handle ICE candidate generation
         rtcInstance.current.onicecandidate = (event) => {
           if (event.candidate) {
-            console.log("Receiver ICE:", event.candidate);
+            console.log("Sender Receiver ICE candidate to Sender");
             // Send the candidate to the remote peer via the signaling server
             socket.emit("add-ice-candidate", {
               candidate: event.candidate,
@@ -70,7 +69,10 @@ export const Receiver = ({ socket }: { socket: Socket }) => {
       });
 
       socket.on("add-ice-candidate", ({ candidate, type }) => {
-        console.log("add-ice-candidate receiver", { candidate, type });
+        console.log("add sender ICE candidate to Receiver RTC instance", {
+          candidate,
+          type,
+        });
         if (type == "sender") {
           rtcInstance.current.addIceCandidate(candidate);
         }
@@ -97,9 +99,9 @@ export const Receiver = ({ socket }: { socket: Socket }) => {
   }, [receiverVideoTrackRef, remoteVideoTrack]);
 
   return (
-    <>
+    <div className="flex-1">
       {/* <audio autoPlay ref={receiverAudioTrackRef} /> */}
-      <video autoPlay ref={receiverVideoTrackRef} />
-    </>
+      <video autoPlay ref={receiverVideoTrackRef} width="100%" />
+    </div>
   );
 };

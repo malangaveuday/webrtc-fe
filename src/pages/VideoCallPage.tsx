@@ -35,7 +35,7 @@ export const VideoCallPage = ({
     }
   }, []);
   return (
-    <>
+    <div className="w-full flex">
       {socket && (
         <>
           <Sender
@@ -46,6 +46,6 @@ export const VideoCallPage = ({
           <Receiver socket={socket} />
         </>
       )}
-    </>
+    </div>
   );
 };
